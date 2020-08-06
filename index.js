@@ -6,8 +6,8 @@ function renderPokemonList(pokemonList) {
   pokemonList.results.forEach(pokemon => {
     const li = document.createElement('li');
     const a = document.createElement('a');
-    // li.textContent = pokemon.name;
     a.textContent = pokemon.name;
+    a.addEventListener('click', getPokemonName)
     ulContainer.appendChild(li);
     li.appendChild(a);
 
@@ -23,17 +23,27 @@ apiPromise
     renderPokemonList(pokemonList);
   })
 
-const name = 'bulbasaur';
-const pokemonData = fetch(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+let pokemonName;
 
-pokemonData
-  .then(function (response) {
-    return response.json()
-  })
-  .then(function (pokemon) {
-    console.log(pokemon);
-    renderPokemonDetails(pokemon);
-  })
+const getPokemonName = (e) => {
+  pokemonName = e.target.childNodes[0].data
+  return getPokemonDetails(pokemonName);
+  console.log(pokemonName)
+
+}
+
+function getPokemonDetails(name) {
+  const pokemonData = fetch(`https://pokeapi.co/api/v2/pokemon/${name}/`);
+
+  pokemonData
+    .then(function (response) {
+      return response.json()
+    })
+    .then(function (pokemon) {
+      console.log(pokemon);
+      renderPokemonDetails(pokemon);
+    })
+}
 
 function renderPokemonDetails(pokemon) {
   const pokemonContainer = document.querySelector('#pokemon-container')
@@ -45,6 +55,5 @@ function renderPokemonDetails(pokemon) {
   <p class="">Weight: ${pokemon.weight}</p>
   <p class="">XP: ${pokemon.base_experience}</p>
   <p class="">Abilities: ${pokemon.abilities[0].ability.name}</p>
-
   `
 }
