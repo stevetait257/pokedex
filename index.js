@@ -7,7 +7,11 @@ function renderPokemonList(pokemonList) {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.textContent = pokemon.name;
-    a.addEventListener('click', getPokemonName)
+    a.dataset.pokemonName = pokemon.name
+    a.addEventListener('click', (e) => {
+      pokemonName = e.target.dataset.pokemonName;
+      getPokemonDetails(pokemonName);
+    });
     ulContainer.appendChild(li);
     li.appendChild(a);
 
@@ -19,18 +23,8 @@ apiPromise
     return response.json()
   })
   .then(function (pokemonList) {
-    console.log(pokemonList);
     renderPokemonList(pokemonList);
   })
-
-let pokemonName;
-
-const getPokemonName = (e) => {
-  pokemonName = e.target.childNodes[0].data
-  return getPokemonDetails(pokemonName);
-  console.log(pokemonName)
-
-}
 
 function getPokemonDetails(name) {
   const pokemonData = fetch(`https://pokeapi.co/api/v2/pokemon/${name}/`);
